@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>APEX — The Website is the Drive</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            graphite: '#0b0c0e',
+            'graphite-deep': '#060708',
+            'graphite-card': '#111317',
+            'titanium': '#eceae5',
+            'titanium-dim': '#9e9c96',
+            amber: {
+              apex: '#f59e0b',
+              glow: '#fbbf24',
+              dim: '#78350f'
+            },
+            slate: {
+              aero: '#475569',
+              tech: '#1e293b'
+            }
+          },
+          fontFamily: {
+            sans: ['"Space Grotesk"', 'sans-serif'],
+            display: ['"Syne"', '"Space Grotesk"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      background-color: #060708;
+      color: #eceae5;
+      overflow-x: hidden;
+      cursor: default;
+    }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #060708;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 2px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #f59e0b;
+    }
+
+    /* Custom Cursor Energy Field */
+    #cursor-dot {
+      pointer-events: none;
+      transition: transform 0.08s ease-out, opacity 0.3s ease;
+      z-index: 9999;
+    }
+    #cursor-ring {
+      pointer-events: none;
+      transition: transform 0.22s ease-out, width 0.2s, height 0.2s, border-color 0.2s;
+      z-index: 9998;
+    }
+
+    /* Laser beam animation for ignition */
+    @keyframes laserShoot {
+      0% { transform: scaleX(0); opacity: 0; }
+      40% { transform: scaleX(1); opacity: 1; filter: drop-shadow(0 0 15px #f59e0b); }
+      100% { transform: scaleX(1); opacity: 0; }
+    }
+    .animate-laser {
+      animation: laserShoot 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Speed streaks */
+    .speed-line {
+      position: absolute;
+      background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.4), transparent);
+      height: 1px;
+      pointer-events: none;
+    }
+
+    /* Grid overlay */
+    .bg-telemetry-grid {
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    }
+
+    /* Scanner spotlight effect */
+    .scanner-mask {
+      background: radial-gradient(circle 180px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(245,158,11,0.18) 0%, rgba(11,12,14,0.92) 75%, #060708 100%);
+    }
+
+    /* Stacking card sticky transitions */
+    .sticky-card {
+      position: sticky;
+      top: 140px;
+    }
+  </style>
+</head>
+<body class="selection:bg-amber-apex selection:text-black font-sans relative antialiased">
+<!-- Interactive Energy Cursor -->
+<div class="fixed w-2 h-2 rounded-full bg-amber-apex shadow-[0_0_12px_#f59e0b] -translate-x-1/2 -translate-y-1/2 left-0 top-0" id="cursor-dot"></div>
+<div class="fixed w-10 h-10 rounded-full border border-amber-apex/30 -translate-x-1/2 -translate-y-1/2 left-0 top-0 pointer-events-none flex items-center justify-center" id="cursor-ring">
+<span class="w-1 h-1 rounded-full bg-white/40"></span>
+</div>
+<!-- Real-Time Dynamic Top Telemetry HUD (Revealed post-ignition) -->
+<header class="fixed top-0 left-0 w-full px-8 py-5 flex items-center justify-between z-50 transition-all duration-700 opacity-0 -translate-y-full backdrop-blur-md bg-graphite/40 border-b border-white/5" id="apex-nav">
+<div class="flex items-center gap-6">
+<img alt="APEX" class="h-6 w-auto opacity-90 hover:opacity-100 transition-opacity" src="https://lh3.googleusercontent.com/aida/AEtjO1VKjA4zWoe6oxC6V2H_vbdp4EpBAWLimXoMuQk3LPqlbUJGC_LKQaNLHBdIA6_kHZuzel_d6MK4UmLZ4AJOihGAEbiKAn1nTyE2Y4fH1BSBQJLUVDOezF55fIj0y8gp0DBJ-ZiqrmQUWM4kcOgZ2iL3dFEWTpvmCPUYbIU1JF4WJhPDCNOtf9liwLebWwvmqwdDjWqOguQg-eDgUKJK1WxS2nd-pJ_xreU93dzm2Z-s0Cg4QmCWnxl6hkY"/>
+<div class="hidden md:flex items-center gap-3 pl-6 border-l border-white/10 font-mono text-[11px] text-slate-aero">
+<span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+<span class="tracking-widest uppercase">TELEMETRY_LINK // ACTIVE</span>
+<span class="text-white/30">|</span>
+<span class="text-amber-apex font-mono" id="nav-mode-readout">STANDBY MODE</span>
+</div>
+</div>
+<!-- Dynamic Velocity Meter in Nav -->
+<div class="flex items-center gap-8 font-mono text-xs">
+<div class="hidden lg:flex items-center gap-6 text-[11px] text-titanium-dim">
+<span>AERO: <strong class="text-titanium">0.21 Cd</strong></span>
+<span>TORQUE: <strong class="text-titanium">1,240 Nm</strong></span>
+<span>LATERAL G: <span class="text-amber-apex font-bold" id="hud-g-force">1.02 G</span></span>
+</div>
+<div class="flex items-center gap-3 bg-white/5 px-3.5 py-1.5 rounded-full border border-white/10">
+<span class="text-[10px] uppercase tracking-wider text-slate-aero">VELOCITY</span>
+<span class="text-sm font-bold text-amber-apex" id="nav-speed-val">000</span>
+<span class="text-[10px] text-slate-aero">KM/H</span>
+</div>
+<a class="relative group overflow-hidden px-5 py-1.5 rounded text-xs font-mono tracking-wider uppercase border border-amber-apex/50 bg-amber-apex/10 text-amber-apex hover:bg-amber-apex hover:text-black transition-all duration-300" href="#reserve-section">
+<span class="relative z-10 font-semibold">RESERVE CHASSIS</span>
+</a>
+</div>
+</header>
+<!-- ========================================================================= -->
+<!-- 01 — THE IGNITION: INITIAL PURE COLD STATE                                -->
+<!-- ========================================================================= -->
+<section class="relative w-full h-screen flex flex-col items-center justify-center bg-graphite-deep select-none z-40 overflow-hidden" id="ignition-section">
+<!-- Subtle background spatial grid -->
+<div class="absolute inset-0 bg-telemetry-grid opacity-30 pointer-events-none"></div>
+<!-- Engine laser start effect container -->
+<div class="absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-amber-apex to-transparent transform scale-x-0 opacity-0 pointer-events-none z-30" id="ignition-laser"></div>
+<div class="relative z-20 flex flex-col items-center text-center px-4">
+<p class="font-mono text-xs uppercase tracking-[0.4em] text-slate-aero mb-2">APEX KINETIC SYSTEM</p>
+<h1 class="font-display text-4xl md:text-6xl font-black tracking-tight text-titanium mb-4">APEX</h1>
+<div class="inline-flex items-center gap-2 font-mono text-[11px] tracking-widest text-slate-aero/80 uppercase bg-white/5 border border-white/5 px-3 py-1 rounded-full mb-16">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-apex/50"></span>
+<span>SYSTEM OFFLINE</span>
+</div>
+<!-- Tactical Ignition Reactive Node -->
+<div class="relative cursor-pointer group flex flex-col items-center" id="ignition-trigger-wrap">
+<!-- Interactive energy ripples -->
+<div class="absolute -inset-8 rounded-full border border-amber-apex/10 scale-90 group-hover:scale-125 group-hover:border-amber-apex/40 transition-all duration-700 pointer-events-none" id="ignition-ripple"></div>
+<div class="absolute -inset-4 rounded-full border border-amber-apex/20 group-hover:scale-110 transition-transform duration-500 pointer-events-none"></div>
+<!-- The core button -->
+<button class="relative w-20 h-20 rounded-full bg-graphite-card border border-amber-apex/40 flex items-center justify-center shadow-[0_0_30px_rgba(0,0,0,0.8)] group-hover:border-amber-apex group-hover:shadow-[0_0_35px_rgba(245,158,11,0.4)] transition-all duration-300" id="ignition-btn">
+<div class="w-4 h-4 rounded-full bg-amber-apex shadow-[0_0_15px_#f59e0b] group-hover:scale-125 transition-transform duration-300" id="ignition-core"></div>
+</button>
+<span class="mt-6 font-mono text-xs tracking-[0.3em] uppercase text-titanium-dim group-hover:text-amber-apex transition-colors">
+          TOUCH TO IGNITE
+        </span>
+<span class="mt-1 font-mono text-[10px] text-slate-aero tracking-widest">[ ENGAGE MACHINE ]</span>
+</div>
+</div>
+<div class="absolute bottom-8 text-center font-mono text-[10px] text-slate-aero/60 tracking-widest">
+      COORDINATES // 45.4215° N, 75.6972° W • CHASSIS 001
+    </div>
+</section>
+<!-- WRAPPER: UNLOCKED ENVIRONMENT AFTER IGNITION -->
+<main class="opacity-30 filter blur-[2px] transition-all duration-1000 pointer-events-none" id="drive-experience">
+<!-- ========================================================================= -->
+<!-- 02 — DON'T SHOW THE CAR YET: ASSEMBLY BY SCROLL                          -->
+<!-- ========================================================================= -->
+<section class="relative min-h-screen py-24 px-6 md:px-16 border-t border-white/5 bg-graphite flex flex-col justify-center" id="assembly-section">
+<div class="max-w-7xl mx-auto w-full">
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-16 border-b border-white/10 pb-8">
+<div>
+<span class="font-mono text-xs text-amber-apex tracking-widest uppercase">STAGE 01 // DECONSTRUCTION</span>
+<h2 class="text-3xl md:text-5xl font-display font-bold text-titanium mt-2">AERODYNAMICS FIRST.</h2>
+</div>
+<p class="font-mono text-xs text-slate-aero max-w-sm mt-4 md:mt-0 leading-relaxed">
+            The vehicle does not precede the physics. Scroll down to assemble each structural node into an aerodynamic silhouette.
+          </p>
+</div>
+<!-- Scroll Assembly Visualizer Pipeline -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+<!-- Step indicators -->
+<div class="lg:col-span-4 space-y-6">
+<div class="p-6 rounded-xl border border-amber-apex/40 bg-white/[0.02] transition-all duration-300" id="comp-step-1">
+<div class="flex items-center justify-between font-mono text-xs text-amber-apex mb-1">
+<span>PHASE 01</span>
+<span>DRAG: 0.08 Cd</span>
+</div>
+<h3 class="text-lg font-bold text-titanium">Carbon-Fiber Aero Monocoque</h3>
+<p class="text-xs text-titanium-dim mt-2 font-mono">Single-piece dry autoclave weave with inverted ground-effect venturis.</p>
+</div>
+<div class="p-6 rounded-xl border border-white/5 bg-white/[0.01] opacity-50 transition-all duration-300" id="comp-step-2">
+<div class="flex items-center justify-between font-mono text-xs text-slate-aero mb-1">
+<span>PHASE 02</span>
+<span>21" TURBINE</span>
+</div>
+<h3 class="text-lg font-bold text-titanium">Aero-Forged Centerlock Wheels</h3>
+<p class="text-xs text-titanium-dim mt-2 font-mono">Centrifugal air evacuation blades pulling heat out of carbon-silicon brakes.</p>
+</div>
+<div class="p-6 rounded-xl border border-white/5 bg-white/[0.01] opacity-50 transition-all duration-300" id="comp-step-3">
+<div class="flex items-center justify-between font-mono text-xs text-slate-aero mb-1">
+<span>PHASE 03</span>
+<span>SURGICAL PHOTONS</span>
+</div>
+<h3 class="text-lg font-bold text-titanium">Surgical Amber Matrix Blades</h3>
+<p class="text-xs text-titanium-dim mt-2 font-mono">Ultra-thin laser diodes slicing through atmospheric fog and high-speed vapor.</p>
+</div>
+<div class="p-6 rounded-xl border border-white/5 bg-white/[0.01] opacity-50 transition-all duration-300" id="comp-step-4">
+<div class="flex items-center justify-between font-mono text-xs text-slate-aero mb-1">
+<span>PHASE 04</span>
+<span>DOWNFORCE: 680 KG</span>
+</div>
+<h3 class="text-lg font-bold text-titanium">Active Dual Venturi Diffuser</h3>
+<p class="text-xs text-titanium-dim mt-2 font-mono">Dynamic flaps modulating ground vacuum at speeds beyond 200 km/h.</p>
+</div>
+</div>
+<!-- Dynamic Vehicle Component Viewport with Embedded WebGL Air Streamlines -->
+<div class="lg:col-span-8 relative aspect-video rounded-2xl overflow-hidden border border-white/10 bg-graphite-deep shadow-2xl flex items-center justify-center p-8 group">
+<div class="absolute inset-0 bg-telemetry-grid opacity-20 pointer-events-none"></div>
+<!-- Real generated hypercar photo with interactive reveal overlay -->
+<img alt="APEX Assembled Hypercar" class="w-full h-full object-cover rounded-lg filter contrast-125 transition-all duration-700" id="assembled-car-img" src="https://lh3.googleusercontent.com/aida/AEtjO1VdxZNrMUBxXWcu--Tu-u6y56ahLA6lbwoDgmyyxWy3AjR2uDhjP0KG6UDf8ZWSt3w-A_KRXWfZzGTLilomz_i_osrqJRnsAY_zeKgOa-khP3qRbWoQidjlLddhMN55IytxiT5kQoJH0gjqp6BflsZ9mFNauhoD9UXtonuiTXFSk-epcZd2gv8oBV7oCy0ODiVNxhIZfIy8mFc4gixVtg889zem2yEcMcJdZVJTvOj2SIavEzTHskgwLX4"/>
+<!-- WebGL Air Streamline Shader: Flowing aerodynamic streamlines racing over roofline and diffuser wake -->
+<!-- STITCH_SHADER_START:ANIMATION_5 class="absolute inset-0 w-full h-full pointer-events-none mix-blend-screen opacity-90 z-10" -->
+<div class="absolute inset-0 w-full h-full pointer-events-none mix-blend-screen opacity-90 z-10" style="display:block;">
+<canvas id="shader-canvas-ANIMATION_5" style="display:block;width:100%;height:100%"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_5');
+
+  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+  // This fires on initial layout and whenever the element is resized.
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+uniform float u_time;
+uniform vec2 u_resolution;
+uniform vec2 u_mouse;
+varying vec2 v_texCoord;
+
+// Simplex noise / procedural flow field helpers
+vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
+
+float snoise(vec2 v) {
+  const vec4 C = vec4(0.211324865405187,  // (3.0-sqrt(3.0))/6.0
+                      0.366025403784439,  // 0.5*(sqrt(3.0)-1.0)
+                     -0.577350269189626,  // -1.0 + 2.0 * C.x
+                      0.024390243902439); // 1.0 / 41.0
+  vec2 i  = floor(v + dot(v, C.yy) );
+  vec2 x0 = v -   i + dot(i, C.xx);
+  vec2 i1;
+  i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+  vec4 x12 = x0.xyxy + C.xxzz;
+  x12.xy -= i1;
+  i = mod289(i);
+  vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 ))
+        + i.x + vec3(0.0, i1.x, 1.0 ));
+  vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
+  m = m*m ;
+  m = m*m ;
+  vec3 x = 2.0 * fract(p * C.www) - 1.0;
+  vec3 h = abs(x) - 0.5;
+  vec3 ox = floor(x + 0.5);
+  vec3 a0 = x - ox;
+  m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );
+  vec3 g;
+  g.x  = a0.x  * x0.x  + h.x  * x0.y;
+  g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+  return 130.0 * dot(m, g);
+}
+
+void main() {
+    vec2 uv = gl_FragCoord.xy / u_resolution.xy;
+    vec2 mouseNorm = u_mouse / u_resolution;
+    
+    // Wind velocity vector flows horizontally across car silhouette (left to right with turbulent wake)
+    float speed = u_time * 1.8;
+    
+    // Interactive mouse draft disturbance
+    vec2 mouseDelta = uv - mouseNorm;
+    float mouseDist = length(mouseDelta);
+    float mouseInfluence = smoothstep(0.45, 0.0, mouseDist);
+    
+    // Streamline layered frequency
+    float flowX = uv.x * 3.5 - speed;
+    float flowY = uv.y * 12.0;
+    
+    // Aerodynamic streamline distortion
+    float turbulence = snoise(vec2(flowX * 0.4, flowY * 0.15)) * 0.45;
+    turbulence += snoise(vec2(flowX * 1.2, flowY * 0.35 + u_time * 0.8)) * 0.2;
+    turbulence += mouseInfluence * sin((uv.x - u_time * 3.0) * 20.0) * 0.15;
+    
+    float totalLines = 0.0;
+    float amberLines = 0.0;
+    
+    // Multi-ribbon streamline traces representing wind-tunnel laminar & boundary airflow
+    for (int i = 0; i < 9; i++) {
+        float fi = float(i);
+        float lineY = 0.12 + fi * 0.095 + sin(flowX * 0.6 + fi * 1.4) * 0.05 + turbulence * 0.15;
+        // Aero wake compression in the center behind the cockpit / rear spoiler
+        lineY += (0.5 - uv.y) * 0.1 * smoothstep(0.2, 0.9, uv.x);
+        
+        float dist = abs(uv.y - lineY);
+        float intensity = 0.0035 / (dist + 0.0035);
+        
+        // Ribbon pulse and tapering: streamlines brighten across the body and taper into wake vortex
+        float pulse = sin(uv.x * 6.0 - speed * 2.5 + fi * 1.7) * 0.5 + 0.5;
+        float fade = smoothstep(0.0, 0.25, uv.x) * smoothstep(1.0, 0.7, uv.x);
+        
+        if (i == 3 || i == 4 || i == 7) {
+            amberLines += intensity * pulse * fade * 1.35;
+        } else {
+            totalLines += intensity * pulse * fade * 0.85;
+        }
+    }
+    
+    // Color palettes: APEX Surgical Electric Amber (#f59e0b) and Cold Titanium Muted Steel
+    vec3 amberColor = vec3(0.96, 0.62, 0.04);
+    vec3 titaniumColor = vec3(0.55, 0.72, 0.88);
+    vec3 hotGlow = vec3(1.0, 0.92, 0.75);
+    
+    vec3 finalColor = vec3(0.0);
+    finalColor += totalLines * titaniumColor * 0.75;
+    finalColor += amberLines * amberColor * 1.2;
+    finalColor += pow(amberLines * 0.45, 2.0) * hotGlow;
+    
+    // Soft atmospheric aerodynamic fog
+    float haze = snoise(vec2(uv.x * 1.5 - speed * 0.5, uv.y * 2.0)) * 0.04;
+    finalColor += max(haze, 0.0) * amberColor * 0.3;
+    
+    // Background transparency blending
+    float alpha = clamp((totalLines * 0.55 + amberLines * 0.9 + max(haze, 0.0)), 0.0, 0.88);
+    
+    gl_FragColor = vec4(finalColor, alpha);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+  // Shaders that need normalized coords should use: u_mouse / u_resolution.
+  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+  window.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const nx = (event.clientX - rect.left) / rect.width;
+      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      mouse.x = nx * canvas.width;
+      mouse.y = ny * canvas.height;
+    }
+  });
+
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- STITCH_SHADER_END:ANIMATION_5 -->
+<!-- Wind Tunnel Telemetry Live Ribbon -->
+<div class="absolute top-4 left-6 right-6 z-20 flex flex-wrap items-center justify-between pointer-events-none gap-2">
+<div class="flex items-center gap-2 bg-black/80 backdrop-blur-md px-3 py-1.5 rounded-lg border border-amber-apex/40 font-mono text-[10px] text-amber-apex">
+<span class="w-2 h-2 rounded-full bg-amber-apex animate-ping"></span>
+<span class="font-bold tracking-wider">FLOW VELOCITY: 280 KM/H</span>
+<span class="text-white/30">|</span>
+<span class="text-titanium">WIND TUNNEL: 0.21 Cd BOUNDARY LAYER ACTIVE</span>
+</div>
+<div class="hidden sm:flex items-center gap-2 bg-black/80 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/10 font-mono text-[10px] text-slate-aero">
+<span class="text-emerald-400">●</span>
+<span>SURGICAL AMBER VORTEX FILAMENTS</span>
+</div>
+</div>
+<!-- Interactive HUD overlay across the car -->
+<div class="absolute inset-0 pointer-events-none p-6 flex flex-col justify-between z-20">
+<div class="flex justify-between font-mono text-[10px] text-amber-apex mt-8">
+<span class="bg-black/60 px-2 py-1 rounded border border-amber-apex/30 backdrop-blur-sm">MONITOR // LIVE ASYMMETRIC FLUX</span>
+<span class="bg-black/60 px-2 py-1 rounded border border-white/10 text-white/60 backdrop-blur-sm">SYS_REV: 4.882</span>
+</div>
+<!-- Hotspots on car -->
+<div class="relative w-full h-full">
+<div class="absolute top-[52%] left-[48%] -translate-x-1/2 -translate-y-1/2 flex items-center gap-2 group pointer-events-auto cursor-crosshair">
+<span class="w-3 h-3 rounded-full bg-amber-apex animate-ping"></span>
+<span class="absolute w-3 h-3 rounded-full bg-amber-apex"></span>
+<span class="ml-4 font-mono text-[10px] bg-black/80 px-2 py-1 rounded border border-amber-apex/40 text-titanium whitespace-nowrap shadow-lg">SURGICAL AMBER CORE</span>
+</div>
+<div class="absolute bottom-[28%] left-[38%] flex items-center gap-2 pointer-events-auto cursor-crosshair">
+<span class="w-2.5 h-2.5 rounded-full bg-white/70"></span>
+<span class="ml-2 font-mono text-[10px] bg-black/80 px-2 py-1 rounded border border-white/20 text-titanium whitespace-nowrap shadow-lg">AERO CANAL VENTURI</span>
+</div>
+<div class="absolute top-[32%] right-[22%] hidden md:flex items-center gap-2 pointer-events-auto cursor-crosshair">
+<span class="w-2 h-2 rounded-full bg-amber-apex"></span>
+<span class="ml-2 font-mono text-[9px] bg-black/80 px-2 py-1 rounded border border-amber-apex/30 text-amber-apex/90 whitespace-nowrap">DYNAMIC DRAFT TRACKING</span>
+</div>
+</div>
+<div class="font-mono text-[10px] text-slate-aero flex justify-between bg-black/70 px-3 py-1.5 rounded border border-white/10 backdrop-blur-sm">
+<span>STRUCTURAL INTEGRITY: 100%</span>
+<span class="text-amber-apex font-semibold">LAMINAR STREAMLINES CALIBRATED</span>
+<span>CHASSIS READY FOR ACCELERATION</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ========================================================================= -->
+<!-- 03 & 04 — VELOCITY SCROLL & HERO: "FIND YOUR LIMIT"                       -->
+<!-- ========================================================================= -->
+<section class="relative min-h-[140vh] bg-graphite-deep py-20 px-6 md:px-16 overflow-hidden flex flex-col justify-center" id="velocity-hero">
+<!-- Animated speed streaks layer -->
+<div class="absolute inset-0 pointer-events-none opacity-40" id="speed-streaks-container"></div>
+<!-- WebGL Air Streamline Layer in Hero Drive Section -->
+<!-- STITCH_SHADER_START:ANIMATION_5 class="absolute inset-0 w-full h-full pointer-events-none mix-blend-screen opacity-70 z-0" -->
+<div class="absolute inset-0 w-full h-full pointer-events-none mix-blend-screen opacity-70 z-0" style="display:block;">
+<canvas id="shader-canvas-ANIMATION_5" style="display:block;width:100%;height:100%"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_5');
+
+  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+  // This fires on initial layout and whenever the element is resized.
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+uniform float u_time;
+uniform vec2 u_resolution;
+uniform vec2 u_mouse;
+varying vec2 v_texCoord;
+
+// Simplex noise / procedural flow field helpers
+vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
+
+float snoise(vec2 v) {
+  const vec4 C = vec4(0.211324865405187,  // (3.0-sqrt(3.0))/6.0
+                      0.366025403784439,  // 0.5*(sqrt(3.0)-1.0)
+                     -0.577350269189626,  // -1.0 + 2.0 * C.x
+                      0.024390243902439); // 1.0 / 41.0
+  vec2 i  = floor(v + dot(v, C.yy) );
+  vec2 x0 = v -   i + dot(i, C.xx);
+  vec2 i1;
+  i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+  vec4 x12 = x0.xyxy + C.xxzz;
+  x12.xy -= i1;
+  i = mod289(i);
+  vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 ))
+        + i.x + vec3(0.0, i1.x, 1.0 ));
+  vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
+  m = m*m ;
+  m = m*m ;
+  vec3 x = 2.0 * fract(p * C.www) - 1.0;
+  vec3 h = abs(x) - 0.5;
+  vec3 ox = floor(x + 0.5);
+  vec3 a0 = x - ox;
+  m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );
+  vec3 g;
+  g.x  = a0.x  * x0.x  + h.x  * x0.y;
+  g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+  return 130.0 * dot(m, g);
+}
+
+void main() {
+    vec2 uv = gl_FragCoord.xy / u_resolution.xy;
+    vec2 mouseNorm = u_mouse / u_resolution;
+    
+    // Wind velocity vector flows horizontally across car silhouette (left to right with turbulent wake)
+    float speed = u_time * 1.8;
+    
+    // Interactive mouse draft disturbance
+    vec2 mouseDelta = uv - mouseNorm;
+    float mouseDist = length(mouseDelta);
+    float mouseInfluence = smoothstep(0.45, 0.0, mouseDist);
+    
+    // Streamline layered frequency
+    float flowX = uv.x * 3.5 - speed;
+    float flowY = uv.y * 12.0;
+    
+    // Aerodynamic streamline distortion
+    float turbulence = snoise(vec2(flowX * 0.4, flowY * 0.15)) * 0.45;
+    turbulence += snoise(vec2(flowX * 1.2, flowY * 0.35 + u_time * 0.8)) * 0.2;
+    turbulence += mouseInfluence * sin((uv.x - u_time * 3.0) * 20.0) * 0.15;
+    
+    float totalLines = 0.0;
+    float amberLines = 0.0;
+    
+    // Multi-ribbon streamline traces representing wind-tunnel laminar & boundary airflow
+    for (int i = 0; i < 9; i++) {
+        float fi = float(i);
+        float lineY = 0.12 + fi * 0.095 + sin(flowX * 0.6 + fi * 1.4) * 0.05 + turbulence * 0.15;
+        // Aero wake compression in the center behind the cockpit / rear spoiler
+        lineY += (0.5 - uv.y) * 0.1 * smoothstep(0.2, 0.9, uv.x);
+        
+        float dist = abs(uv.y - lineY);
+        float intensity = 0.0035 / (dist + 0.0035);
+        
+        // Ribbon pulse and tapering: streamlines brighten across the body and taper into wake vortex
+        float pulse = sin(uv.x * 6.0 - speed * 2.5 + fi * 1.7) * 0.5 + 0.5;
+        float fade = smoothstep(0.0, 0.25, uv.x) * smoothstep(1.0, 0.7, uv.x);
+        
+        if (i == 3 || i == 4 || i == 7) {
+            amberLines += intensity * pulse * fade * 1.35;
+        } else {
+            totalLines += intensity * pulse * fade * 0.85;
+        }
+    }
+    
+    // Color palettes: APEX Surgical Electric Amber (#f59e0b) and Cold Titanium Muted Steel
+    vec3 amberColor = vec3(0.96, 0.62, 0.04);
+    vec3 titaniumColor = vec3(0.55, 0.72, 0.88);
+    vec3 hotGlow = vec3(1.0, 0.92, 0.75);
+    
+    vec3 finalColor = vec3(0.0);
+    finalColor += totalLines * titaniumColor * 0.75;
+    finalColor += amberLines * amberColor * 1.2;
+    finalColor += pow(amberLines * 0.45, 2.0) * hotGlow;
+    
+    // Soft atmospheric aerodynamic fog
+    float haze = snoise(vec2(uv.x * 1.5 - speed * 0.5, uv.y * 2.0)) * 0.04;
+    finalColor += max(haze, 0.0) * amberColor * 0.3;
+    
+    // Background transparency blending
+    float alpha = clamp((totalLines * 0.55 + amberLines * 0.9 + max(haze, 0.0)), 0.0, 0.88);
+    
+    gl_FragColor = vec4(finalColor, alpha);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+  // Shaders that need normalized coords should use: u_mouse / u_resolution.
+  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+  window.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const nx = (event.clientX - rect.left) / rect.width;
+      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      mouse.x = nx * canvas.width;
+      mouse.y = ny * canvas.height;
+    }
+  });
+
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- STITCH_SHADER_END:ANIMATION_5 -->
+<div class="max-w-7xl mx-auto w-full relative z-10">
+<!-- Velocity Readout Ribbon -->
+<div class="mb-12 flex flex-wrap items-end justify-between gap-6 border-b border-white/10 pb-6 font-mono">
+<div>
+<div class="text-xs text-amber-apex tracking-widest uppercase">03 // KINETIC ACCELERATION</div>
+<div class="text-slate-aero text-xs mt-1">SCROLL SPEED DRIVES ENVIRONMENTAL DISPLACEMENT &amp; STREAMLINE HARMONICS</div>
+</div>
+<div class="flex items-baseline gap-4">
+<span class="text-slate-aero text-xs uppercase">CURRENT VELOCITY</span>
+<span class="text-5xl md:text-7xl font-bold font-mono text-amber-apex tracking-tighter" id="hero-big-speed">042</span>
+<span class="text-lg text-slate-aero">KM/H</span>
+</div>
+</div>
+<!-- Big Hero Typography Statement -->
+<div class="my-10 text-center md:text-left">
+<p class="font-mono text-xs uppercase tracking-[0.3em] text-slate-aero mb-4">THE MACHINE DOES NOT HESITATE</p>
+<h2 class="font-display text-5xl sm:text-7xl md:text-9xl font-black uppercase text-titanium tracking-tight leading-none transition-transform duration-150" id="stretching-title">
+            FIND YOUR<br/>
+<span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-apex via-amber-glow to-titanium">LIMIT.</span>
+</h2>
+</div>
+<!-- Enter Cockpit Virtual Road Action -->
+<div class="mt-16 flex flex-col sm:flex-row items-center justify-between gap-8 p-8 rounded-2xl bg-white/[0.02] border border-white/10 backdrop-blur-xl">
+<div class="flex items-center gap-6">
+<div class="w-12 h-12 rounded-xl bg-amber-apex/10 border border-amber-apex/30 flex items-center justify-center font-mono text-amber-apex font-bold text-lg">
+              05
+            </div>
+<div>
+<h4 class="font-bold text-titanium text-lg">Cockpit Telemetry Mode</h4>
+<p class="text-xs font-mono text-slate-aero">Step inside the driver capsule to modulate steering, gears, and thermal channels.</p>
+</div>
+</div>
+<a class="w-full sm:w-auto px-8 py-4 rounded-xl font-mono text-xs tracking-widest uppercase bg-titanium text-graphite-deep font-bold hover:bg-amber-apex hover:text-black transition-all text-center shadow-lg hover:shadow-amber-apex/20" href="#cockpit-section">
+            [ ENTER DRIVE CAPSULE ↓ ]
+          </a>
+</div>
+</div>
+</section>
+<!-- ========================================================================= -->
+<!-- 05 — COCKPIT MODE: THE VEHICLE DASHBOARD                                  -->
+<!-- ========================================================================= -->
+<section class="relative min-h-screen bg-[#07090c] py-24 px-6 md:px-16 flex flex-col justify-center border-t border-white/5" id="cockpit-section">
+<div class="max-w-6xl mx-auto w-full">
+<div class="text-center mb-12">
+<span class="font-mono text-xs text-amber-apex tracking-[0.3em] uppercase">05 // TELEMETRY COCKPIT</span>
+<h2 class="text-3xl md:text-5xl font-display font-black text-titanium mt-2">YOU ARE IN COMMAND.</h2>
+<p class="font-mono text-xs text-slate-aero mt-2">Move your cursor to dynamically alter vehicle yaw and HUD parallax.</p>
+</div>
+<!-- Cockpit Cluster Dashboard Display Box -->
+<div class="relative p-8 md:p-12 rounded-3xl bg-graphite-card border border-white/15 shadow-[0_20px_70px_rgba(0,0,0,0.9)] overflow-hidden transition-transform duration-200" id="cockpit-hud-frame">
+<!-- Glass reflection lines -->
+<div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-amber-apex/50 to-transparent"></div>
+<div class="absolute inset-0 bg-gradient-to-b from-white/[0.03] to-transparent pointer-events-none"></div>
+<!-- Top HUD Header Status -->
+<div class="flex items-center justify-between font-mono text-xs text-slate-aero border-b border-white/10 pb-6 mb-8">
+<div class="flex items-center gap-3">
+<span class="w-2 h-2 rounded-full bg-amber-apex animate-ping"></span>
+<span class="text-titanium font-semibold">TRACK MODE: NURBURGRING NORDSCHLEIFE</span>
+</div>
+<div class="flex items-center gap-6">
+<span>BATTERY PACK: <strong class="text-emerald-400">92% (620 KM)</strong></span>
+<span>INVERTER TEMP: <strong class="text-amber-apex">84°C</strong></span>
+</div>
+</div>
+<!-- Center Instrument Cluster -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center py-6">
+<!-- Left Dial: G-Force & Yaw -->
+<div class="flex flex-col items-center justify-center p-6 rounded-2xl bg-white/[0.02] border border-white/5">
+<span class="font-mono text-[10px] text-slate-aero tracking-widest uppercase mb-4">LATERAL ACCELEROMETER</span>
+<div class="relative w-32 h-32 rounded-full border border-white/15 flex items-center justify-center">
+<div class="absolute w-20 h-20 rounded-full border border-dashed border-amber-apex/30"></div>
+<div class="w-4 h-4 rounded-full bg-amber-apex shadow-[0_0_12px_#f59e0b] transition-transform duration-75" id="g-ball"></div>
+</div>
+<div class="mt-4 font-mono text-xs text-titanium flex justify-between w-full px-4">
+<span>L: 1.28G</span>
+<span>R: 1.14G</span>
+</div>
+</div>
+<!-- Central Speedometer & Digital Gear Selector -->
+<div class="flex flex-col items-center justify-center text-center">
+<div class="font-mono text-[10px] text-amber-apex tracking-[0.4em] uppercase mb-1">DRIVE TELEMETRY</div>
+<div class="font-mono text-7xl md:text-8xl font-black text-titanium tracking-tighter leading-none" id="cockpit-digital-speed">
+                142
+              </div>
+<div class="font-mono text-sm text-slate-aero tracking-widest mt-1">KM / H</div>
+<!-- RPM Arc Meter -->
+<div class="w-full max-w-xs mt-6">
+<div class="flex justify-between font-mono text-[10px] text-slate-aero mb-1">
+<span>0 RPM</span>
+<span class="text-amber-apex font-bold">12,400 RPM</span>
+<span>16,000</span>
+</div>
+<div class="w-full h-2 rounded-full bg-white/10 overflow-hidden">
+<div class="w-[78%] h-full bg-gradient-to-r from-amber-dim via-amber-apex to-red-500 rounded-full"></div>
+</div>
+</div>
+<!-- Gear selector pills -->
+<div class="flex items-center gap-3 mt-6 font-mono text-xs">
+<button class="w-8 h-8 rounded border border-white/10 text-slate-aero hover:border-white/30">P</button>
+<button class="w-8 h-8 rounded border border-white/10 text-slate-aero hover:border-white/30">R</button>
+<button class="w-8 h-8 rounded border border-white/10 text-slate-aero hover:border-white/30">N</button>
+<button class="w-8 h-8 rounded border border-amber-apex bg-amber-apex/20 text-amber-apex font-bold">D</button>
+<button class="w-8 h-8 rounded border border-amber-apex bg-amber-apex text-black font-bold">S+</button>
+</div>
+</div>
+<!-- Right Dial: Thermal & Regenerative Braking -->
+<div class="flex flex-col items-center justify-center p-6 rounded-2xl bg-white/[0.02] border border-white/5">
+<span class="font-mono text-[10px] text-slate-aero tracking-widest uppercase mb-4">REGEN &amp; FLUX LOAD</span>
+<div class="w-full space-y-4 font-mono text-xs">
+<div>
+<div class="flex justify-between text-titanium mb-1">
+<span>FRONT AXLE MOTOR</span>
+<span class="text-amber-apex">410 HP</span>
+</div>
+<div class="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+<div class="w-[82%] h-full bg-amber-apex"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-titanium mb-1">
+<span>REAR TWIN MOTORS</span>
+<span class="text-amber-apex">790 HP</span>
+</div>
+<div class="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+<div class="w-[96%] h-full bg-amber-apex"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-titanium mb-1">
+<span>REGEN BRAKING LOAD</span>
+<span class="text-emerald-400">220 kW</span>
+</div>
+<div class="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+<div class="w-[65%] h-full bg-emerald-400"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom tactile switches -->
+<div class="mt-8 pt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-4 font-mono text-xs text-slate-aero">
+<div class="flex items-center gap-4">
+<span class="text-titanium">TORQUE VECTORING:</span>
+<span class="text-emerald-400 font-bold">QUAD-INDEPENDENT</span>
+</div>
+<div class="flex items-center gap-4">
+<span>SUSPENSION: <span class="text-titanium">ACTIVE MAGNETORHEOLOGICAL</span></span>
+<span>DIFF: <span class="text-amber-apex">E-LOCKED</span></span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ========================================================================= -->
+<!-- 06 — PERFORMANCE = PLAYABLE VISUALIZATION (0 -> 100 KM/H SNAP)            -->
+<!-- ========================================================================= -->
+<section class="relative py-28 px-6 md:px-16 bg-graphite flex flex-col justify-center border-t border-white/5 overflow-hidden" id="acceleration-lab">
+<div class="max-w-7xl mx-auto w-full">
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-16">
+<div>
+<span class="font-mono text-xs text-amber-apex tracking-widest uppercase">06 // LINEAR LAUNCH DYNAMICS</span>
+<h2 class="text-3xl md:text-5xl font-display font-black text-titanium mt-2">0 TO 100 KM/H IN 3.2 SEC.</h2>
+</div>
+<div class="mt-4 md:mt-0 font-mono text-xs text-slate-aero">
+            PHYSICAL DISPLACEMENT LAUNCH TEST
+          </div>
+</div>
+<!-- Big interactive launch controller box -->
+<div class="relative p-10 md:p-16 rounded-3xl bg-graphite-deep border border-white/10 flex flex-col items-center justify-center text-center overflow-hidden">
+<div class="absolute inset-0 bg-telemetry-grid opacity-25 pointer-events-none"></div>
+<span class="font-mono text-xs text-slate-aero uppercase tracking-widest mb-2">DRAG STRIP TELEMETRY</span>
+<!-- Massive Launch Speed Digits -->
+<div class="flex items-baseline justify-center gap-4 my-6">
+<div class="font-mono text-8xl md:text-[14rem] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-titanium via-titanium-dim to-white/20 select-none" id="launch-counter">
+              00
+            </div>
+<span class="font-mono text-2xl md:text-4xl text-amber-apex font-bold">KM/H</span>
+</div>
+<!-- Launch Status Banner -->
+<div class="font-mono text-sm md:text-base tracking-widest uppercase text-slate-aero py-2 px-6 rounded-full border border-white/10 bg-white/[0.02]" id="launch-banner">
+            PRESS [ LAUNCH PEDAL ] OR SCROLL TO RELEASE TORQUE
+          </div>
+<!-- Interactive Launch Button Trigger -->
+<div class="mt-10 flex flex-wrap justify-center gap-4">
+<button class="px-8 py-4 rounded-xl font-mono text-xs uppercase tracking-widest bg-amber-apex text-black font-bold hover:bg-amber-glow shadow-[0_0_25px_rgba(245,158,11,0.3)] transition-all" id="trigger-launch-btn">
+              ⚡ INITIATE FULL POWER LAUNCH
+            </button>
+<button class="px-6 py-4 rounded-xl font-mono text-xs uppercase tracking-widest border border-white/10 text-titanium-dim hover:text-white hover:border-white/30 transition-all" id="reset-launch-btn">
+              RESET LAUNCH PAD
+            </button>
+</div>
+<!-- Benchmark Specs Bar -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6 w-full max-w-4xl mt-16 pt-10 border-t border-white/10 font-mono text-left">
+<div>
+<span class="text-[10px] text-slate-aero uppercase block">POWER</span>
+<span class="text-2xl font-bold text-titanium">1,200 HP</span>
+<span class="text-[10px] text-amber-apex block mt-0.5">Tri-Motor Vectoring</span>
+</div>
+<div>
+<span class="text-[10px] text-slate-aero uppercase block">0-100 KM/H</span>
+<span class="text-2xl font-bold text-amber-apex">3.2 SEC</span>
+<span class="text-[10px] text-slate-aero block mt-0.5">Dry asphalt surface</span>
+</div>
+<div>
+<span class="text-[10px] text-slate-aero uppercase block">TOP VELOCITY</span>
+<span class="text-2xl font-bold text-titanium">350+ KM/H</span>
+<span class="text-[10px] text-slate-aero block mt-0.5">Electronically governed</span>
+</div>
+<div>
+<span class="text-[10px] text-slate-aero uppercase block">BATTERY ARCH</span>
+<span class="text-2xl font-bold text-titanium">900V</span>
+<span class="text-[10px] text-emerald-400 block mt-0.5">10-80% in 14 min</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ========================================================================= -->
+<!-- 07 & 08 — SCROLL ROTATION & THE MATERIAL LAB (DISASSEMBLY)                -->
+<!-- ========================================================================= -->
+<section class="relative py-28 px-6 md:px-16 bg-graphite-deep border-t border-white/5" id="material-lab">
+<div class="max-w-7xl mx-auto w-full">
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-16">
+<div>
+<span class="font-mono text-xs text-amber-apex tracking-widest uppercase">08 // EXPLODED ENGINEERING DISASSEMBLY</span>
+<h2 class="text-3xl md:text-5xl font-display font-black text-titanium mt-2">THE MATERIAL LAB.</h2>
+</div>
+<p class="font-mono text-xs text-slate-aero max-w-md mt-4 md:mt-0">
+            Hover over or scroll past the engineering strata to physically separate the hypercar into its constituent mechanical layers.
+          </p>
+</div>
+<!-- Exploded Strata Layers Stack -->
+<div class="space-y-6">
+<!-- Layer 1: Body Aerodynamics -->
+<div class="group relative p-8 rounded-2xl bg-graphite-card border border-white/10 hover:border-amber-apex/50 transition-all duration-500 transform hover:-translate-y-2 hover:shadow-[0_15px_30px_rgba(0,0,0,0.8)]">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+<div class="flex items-center gap-6">
+<span class="font-mono text-3xl font-black text-amber-apex/40 group-hover:text-amber-apex transition-colors">01</span>
+<div>
+<span class="font-mono text-[10px] text-slate-aero uppercase tracking-wider">OUTER STRATUM</span>
+<h3 class="text-2xl font-bold text-titanium">Pre-Preg Carbon Fiber Aerodynamic Skin</h3>
+<p class="text-xs font-mono text-titanium-dim mt-1 max-w-xl">Molded in high-pressure nitrogen autoclaves at 180°C. 42% lighter than aluminum with 3x torsional stiffness.</p>
+</div>
+</div>
+<div class="flex items-center gap-8 font-mono text-xs">
+<div>
+<span class="text-[10px] text-slate-aero block">MASS</span>
+<span class="font-bold text-titanium">148 KG</span>
+</div>
+<div>
+<span class="text-[10px] text-slate-aero block">RIGIDITY</span>
+<span class="font-bold text-amber-apex">54,000 NM/DEG</span>
+</div>
+<div class="px-3 py-1.5 rounded bg-white/5 border border-white/10 text-titanium-dim text-[11px]">
+                  LAYER EXPOSED
+                </div>
+</div>
+</div>
+</div>
+<!-- Layer 2: Battery Pack Structural Tray -->
+<div class="group relative p-8 rounded-2xl bg-graphite-card border border-white/10 hover:border-amber-apex/50 transition-all duration-500 transform hover:-translate-y-2 hover:shadow-[0_15px_30px_rgba(0,0,0,0.8)]">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+<div class="flex items-center gap-6">
+<span class="font-mono text-3xl font-black text-amber-apex/40 group-hover:text-amber-apex transition-colors">02</span>
+<div>
+<span class="font-mono text-[10px] text-slate-aero uppercase tracking-wider">ENERGY SPINE</span>
+<h3 class="text-2xl font-bold text-titanium">Structural 900V Silicon-Anode Battery Cell</h3>
+<p class="text-xs font-mono text-titanium-dim mt-1 max-w-xl">Cell-to-chassis structural pack with immersed dielectric fluid cooling capable of continuous 400 kW discharge.</p>
+</div>
+</div>
+<div class="flex items-center gap-8 font-mono text-xs">
+<div>
+<span class="text-[10px] text-slate-aero block">CAPACITY</span>
+<span class="font-bold text-titanium">112 KWH</span>
+</div>
+<div>
+<span class="text-[10px] text-slate-aero block">DISCHARGE C-RATE</span>
+<span class="font-bold text-amber-apex">6.5C PEAK</span>
+</div>
+<div class="px-3 py-1.5 rounded bg-white/5 border border-white/10 text-titanium-dim text-[11px]">
+                  CHASSIS CORE
+                </div>
+</div>
+</div>
+</div>
+<!-- Layer 3: Dual Electric Axial Flux Motors -->
+<div class="group relative p-8 rounded-2xl bg-graphite-card border border-white/10 hover:border-amber-apex/50 transition-all duration-500 transform hover:-translate-y-2 hover:shadow-[0_15px_30px_rgba(0,0,0,0.8)]">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+<div class="flex items-center gap-6">
+<span class="font-mono text-3xl font-black text-amber-apex/40 group-hover:text-amber-apex transition-colors">03</span>
+<div>
+<span class="font-mono text-[10px] text-slate-aero uppercase tracking-wider">KINETIC PROPULSION</span>
+<h3 class="text-2xl font-bold text-titanium">Dual Axial-Flux Carbon-Sleeved Motors</h3>
+<p class="text-xs font-mono text-titanium-dim mt-1 max-w-xl">Extreme power-density rotors operating up to 20,000 RPM with instant sub-millisecond torque vectoring.</p>
+</div>
+</div>
+<div class="flex items-center gap-8 font-mono text-xs">
+<div>
+<span class="text-[10px] text-slate-aero block">DENSITY</span>
+<span class="font-bold text-titanium">15 KW/KG</span>
+</div>
+<div>
+<span class="text-[10px] text-slate-aero block">MAX TORQUE</span>
+<span class="font-bold text-amber-apex">1,240 NM</span>
+</div>
+<div class="px-3 py-1.5 rounded bg-white/5 border border-white/10 text-titanium-dim text-[11px]">
+                  SUB-FRAME
+                </div>
+</div>
+</div>
+</div>
+<!-- Layer 4: Cryogenic Thermal Regulation -->
+<div class="group relative p-8 rounded-2xl bg-graphite-card border border-white/10 hover:border-amber-apex/50 transition-all duration-500 transform hover:-translate-y-2 hover:shadow-[0_15px_30px_rgba(0,0,0,0.8)]">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+<div class="flex items-center gap-6">
+<span class="font-mono text-3xl font-black text-amber-apex/40 group-hover:text-amber-apex transition-colors">04</span>
+<div>
+<span class="font-mono text-[10px] text-slate-aero uppercase tracking-wider">THERMODYNAMICS</span>
+<h3 class="text-2xl font-bold text-titanium">Micro-Channel Active Thermal Heat Exchangers</h3>
+<p class="text-xs font-mono text-titanium-dim mt-1 max-w-xl">Laser-sintered titanium heat pipes venting heat directly through the rear venturi diffuser wake.</p>
+</div>
+</div>
+<div class="flex items-center gap-8 font-mono text-xs">
+<div>
+<span class="text-[10px] text-slate-aero block">HEAT REJECTION</span>
+<span class="font-bold text-titanium">85 KW</span>
+</div>
+<div>
+<span class="text-[10px] text-slate-aero block">COOLANT FLUX</span>
+<span class="font-bold text-emerald-400">OPTIMAL</span>
+</div>
+<div class="px-3 py-1.5 rounded bg-white/5 border border-white/10 text-titanium-dim text-[11px]">
+                  THERMAL GRID
+                </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ========================================================================= -->
+<!-- 09 — STACKING CARDS: "THE APEX CODE"                                      -->
+<!-- ========================================================================= -->
+<section class="relative py-28 px-6 md:px-16 bg-graphite border-t border-white/5" id="apex-code-section">
+<div class="max-w-5xl mx-auto w-full">
+<div class="text-center mb-20">
+<span class="font-mono text-xs text-amber-apex tracking-[0.3em] uppercase">09 // PHILOSOPHICAL FOUNDATION</span>
+<h2 class="text-4xl md:text-6xl font-display font-black text-titanium mt-2">THE APEX CODE.</h2>
+<p class="font-mono text-xs text-slate-aero mt-2">Physical card stacking: As you scroll, each doctrine anchors the machine.</p>
+</div>
+<!-- Sticky Physical Stacking Cards Sequence -->
+<div class="space-y-12 pb-24">
+<!-- Card 01: CONTROL -->
+<div class="sticky-card p-10 md:p-14 rounded-3xl bg-graphite-card border border-white/15 shadow-[0_25px_50px_rgba(0,0,0,0.8)] backdrop-blur-xl">
+<div class="flex justify-between items-start mb-8 font-mono">
+<span class="text-5xl font-black text-amber-apex">01</span>
+<span class="text-xs text-slate-aero uppercase tracking-widest">[ DOCTRINE // VELOCITY ]</span>
+</div>
+<h3 class="text-3xl md:text-4xl font-display font-bold text-titanium mb-4">CONTROL OVER VELOCITY.</h3>
+<p class="text-titanium-dim text-base md:text-lg max-w-2xl leading-relaxed">
+              Speed without authority is merely panic. APEX does not accelerate into chaos; it bends physics through active aerodynamics and millisecond motor vectoring so the driver experiences complete stillness in the center of violence.
+            </p>
+<div class="mt-8 pt-6 border-t border-white/10 flex items-center gap-6 font-mono text-xs text-slate-aero">
+<span>RESPONSE: &lt; 2.4 MS</span>
+<span>•</span>
+<span>YAW PREDICTION: ACTIVE</span>
+</div>
+</div>
+<!-- Card 02: PRECISION -->
+<div class="sticky-card p-10 md:p-14 rounded-3xl bg-[#13161c] border border-white/15 shadow-[0_25px_50px_rgba(0,0,0,0.8)] backdrop-blur-xl">
+<div class="flex justify-between items-start mb-8 font-mono">
+<span class="text-5xl font-black text-amber-apex">02</span>
+<span class="text-xs text-slate-aero uppercase tracking-widest">[ DOCTRINE // TOLERANCE ]</span>
+</div>
+<h3 class="text-3xl md:text-4xl font-display font-bold text-titanium mb-4">SURGICAL PRECISION.</h3>
+<p class="text-titanium-dim text-base md:text-lg max-w-2xl leading-relaxed">
+              Every panel gap is calibrated down to 0.4mm. Carbon weave alignment flows unbroken from the front splitter across the roofline down through the active diffuser. There are no decorative lines—only functional air channels.
+            </p>
+<div class="mt-8 pt-6 border-t border-white/10 flex items-center gap-6 font-mono text-xs text-slate-aero">
+<span>GAP TOLERANCE: 0.4 MM</span>
+<span>•</span>
+<span>AERO WEAVE: 3K TWILL</span>
+</div>
+</div>
+<!-- Card 03: INTELLIGENCE -->
+<div class="sticky-card p-10 md:p-14 rounded-3xl bg-[#161a22] border border-amber-apex/30 shadow-[0_25px_50px_rgba(0,0,0,0.8)] backdrop-blur-xl">
+<div class="flex justify-between items-start mb-8 font-mono">
+<span class="text-5xl font-black text-amber-apex">03</span>
+<span class="text-xs text-slate-aero uppercase tracking-widest">[ DOCTRINE // SYNAPSE ]</span>
+</div>
+<h3 class="text-3xl md:text-4xl font-display font-bold text-titanium mb-4">TACTILE INTELLIGENCE.</h3>
+<p class="text-titanium-dim text-base md:text-lg max-w-2xl leading-relaxed">
+              We reject touchscreens that force drivers to look away from the apex. Every primary command is an engineered cold-milled aluminum switch with calibrated haptic resistance. The interface communicates through tactile confirmation.
+            </p>
+<div class="mt-8 pt-6 border-t border-white/10 flex items-center gap-6 font-mono text-xs text-amber-apex">
+<span>PHYSICAL SWITCHES: 100%</span>
+<span>•</span>
+<span>LATENCY: ZERO</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ========================================================================= -->
+<!-- 10 — CURSOR SCANNER SECTION: "LOOK CLOSER"                                -->
+<!-- ========================================================================= -->
+<section class="relative min-h-screen py-28 px-6 md:px-16 bg-graphite-deep border-t border-white/5 flex flex-col justify-center overflow-hidden" id="scanner-section">
+<div class="max-w-7xl mx-auto w-full relative z-10">
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+<div>
+<span class="font-mono text-xs text-amber-apex tracking-widest uppercase">10 // X-RAY PHOTON SCANNER</span>
+<h2 class="text-3xl md:text-5xl font-display font-black text-titanium mt-2">LOOK CLOSER.</h2>
+</div>
+<p class="font-mono text-xs text-slate-aero max-w-sm mt-4 md:mt-0">
+            Move your cursor across the chassis viewport. The cursor acts as a surgical collimated beam revealing concealed telemetry specifications.
+          </p>
+</div>
+<!-- Scanner Viewport Frame -->
+<div class="relative h-[550px] w-full rounded-3xl overflow-hidden border border-white/15 bg-black cursor-crosshair" id="scanner-viewport">
+<!-- Background image: Car silhouette -->
+<img alt="APEX Scanner View" class="absolute inset-0 w-full h-full object-cover filter brightness-75 contrast-125" src="https://lh3.googleusercontent.com/aida/AEtjO1VdxZNrMUBxXWcu--Tu-u6y56ahLA6lbwoDgmyyxWy3AjR2uDhjP0KG6UDf8ZWSt3w-A_KRXWfZzGTLilomz_i_osrqJRnsAY_zeKgOa-khP3qRbWoQidjlLddhMN55IytxiT5kQoJH0gjqp6BflsZ9mFNauhoD9UXtonuiTXFSk-epcZd2gv8oBV7oCy0ODiVNxhIZfIy8mFc4gixVtg889zem2yEcMcJdZVJTvOj2SIavEzTHskgwLX4"/>
+<!-- Collimated beam radial spotlight overlay -->
+<div class="absolute inset-0 scanner-mask pointer-events-none transition-all duration-75" id="scanner-overlay"></div>
+<!-- Hidden technical HUD inspection readouts positioned across car geometry -->
+<div class="absolute top-[28%] left-[22%] font-mono text-xs bg-black/90 px-3.5 py-2 rounded-lg border border-amber-apex/60 text-titanium shadow-xl">
+<span class="text-amber-apex font-bold block text-[10px]">SCAN: NOSE SPLITTER</span>
+<span>GROUND EFFECT FLUX: 420 KG</span>
+</div>
+<div class="absolute top-[48%] left-[54%] font-mono text-xs bg-black/90 px-3.5 py-2 rounded-lg border border-amber-apex/60 text-titanium shadow-xl">
+<span class="text-amber-apex font-bold block text-[10px]">SCAN: COCKPIT CANOPY</span>
+<span>AERO COEFFICIENT: 0.21 Cd</span>
+</div>
+<div class="absolute bottom-[24%] left-[34%] font-mono text-xs bg-black/90 px-3.5 py-2 rounded-lg border border-amber-apex/60 text-titanium shadow-xl">
+<span class="text-amber-apex font-bold block text-[10px]">SCAN: BRAKE ASSEMBLY</span>
+<span>410MM CARBON CERAMIC ROTORS</span>
+</div>
+<div class="absolute bottom-[30%] right-[18%] font-mono text-xs bg-black/90 px-3.5 py-2 rounded-lg border border-amber-apex/60 text-titanium shadow-xl">
+<span class="text-amber-apex font-bold block text-[10px]">SCAN: ACTIVE REAR WING</span>
+<span>DUAL STABILIZER FLAPS: ±15°</span>
+</div>
+<div class="absolute bottom-6 left-6 font-mono text-[11px] text-slate-aero bg-black/80 px-3 py-1.5 rounded border border-white/10">
+            [ SENSOR STATUS // COLLIMATED BEAM 632NM ]
+          </div>
+</div>
+</div>
+</section>
+<!-- ========================================================================= -->
+<!-- 11 & 12 — TIMELINE & "CHOOSE YOUR MACHINE"                                 -->
+<!-- ========================================================================= -->
+<section class="relative py-28 px-6 md:px-16 bg-graphite border-t border-white/5" id="models-section">
+<div class="max-w-7xl mx-auto w-full">
+<!-- Evolution Timeline Horizontal Track -->
+<div class="mb-24">
+<div class="flex items-center justify-between mb-8">
+<span class="font-mono text-xs text-amber-apex tracking-widest uppercase">11 // THE MACHINE EVOLVES</span>
+<span class="font-mono text-xs text-slate-aero">CHRONOLOGY // 2024 — 2027</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 font-mono text-xs">
+<div class="p-6 rounded-2xl bg-white/[0.02] border border-white/10">
+<span class="text-amber-apex font-bold text-lg block mb-1">2024</span>
+<span class="text-titanium font-semibold block mb-2">PROJECT ZERO: WIND TUNNEL</span>
+<p class="text-slate-aero text-[11px] leading-relaxed">Scale CFD virtual modeling defining the 0.21 Cd teardrop capsule.</p>
+</div>
+<div class="p-6 rounded-2xl bg-white/[0.02] border border-white/10">
+<span class="text-amber-apex font-bold text-lg block mb-1">2025</span>
+<span class="text-titanium font-semibold block mb-2">MULE 01: THERMAL TESTING</span>
+<p class="text-slate-aero text-[11px] leading-relaxed">Arctic cold-soak and desert battery discharge validation.</p>
+</div>
+<div class="p-6 rounded-2xl bg-white/[0.02] border border-white/10">
+<span class="text-amber-apex font-bold text-lg block mb-1">2026</span>
+<span class="text-titanium font-semibold block mb-2">RING LAP RECORD ATTEMPT</span>
+<p class="text-slate-aero text-[11px] leading-relaxed">Sub-6:30 target lap time at Nürburgring Nordschleife.</p>
+</div>
+<div class="p-6 rounded-2xl bg-amber-apex/10 border border-amber-apex/40">
+<span class="text-amber-apex font-bold text-lg block mb-1">2027</span>
+<span class="text-titanium font-semibold block mb-2">APEX ROAD PRODUCTION</span>
+<p class="text-titanium-dim text-[11px] leading-relaxed">Bespoke delivery of 99 chassis numbers worldwide.</p>
+</div>
+</div>
+</div>
+<!-- 12 — Choose Your Machine: 3 Distinct Archetypes -->
+<div class="text-center mb-16">
+<span class="font-mono text-xs text-amber-apex tracking-[0.3em] uppercase">12 // FLEET SPECIFICATION</span>
+<h2 class="text-4xl md:text-6xl font-display font-black text-titanium mt-2">CHOOSE YOUR MACHINE.</h2>
+<p class="font-mono text-xs text-slate-aero mt-2">Three variants engineered for distinct velocity objectives.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Variant 1: APEX V1 -->
+<div class="model-card group relative p-8 rounded-3xl bg-graphite-card border border-white/10 hover:border-amber-apex transition-all duration-300 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start font-mono text-xs text-slate-aero mb-6">
+<span>ARCHETYPE 01</span>
+<span class="text-amber-apex">ROAD GT</span>
+</div>
+<h3 class="text-3xl font-display font-bold text-titanium mb-2">APEX V1</h3>
+<p class="text-xs font-mono text-titanium-dim leading-relaxed mb-6">Long-distance grand touring envelope with adaptive active suspension and acoustic isolation.</p>
+<div class="space-y-3 font-mono text-xs border-t border-white/10 pt-6">
+<div class="flex justify-between">
+<span class="text-slate-aero">OUTPUT:</span>
+<span class="text-titanium font-bold">850 HP</span>
+</div>
+<div class="flex justify-between">
+<span class="text-slate-aero">RANGE:</span>
+<span class="text-titanium font-bold">680 KM</span>
+</div>
+<div class="flex justify-between">
+<span class="text-slate-aero">WEIGHT:</span>
+<span class="text-titanium font-bold">1,620 KG</span>
+</div>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-white/10">
+<a class="block w-full py-3 rounded-xl text-center font-mono text-xs uppercase tracking-wider border border-white/20 text-titanium hover:bg-white hover:text-black transition-colors" href="#reserve-section">
+                CONFIGURE V1
+              </a>
+</div>
+</div>
+<!-- Variant 2: APEX GT (Featured) -->
+<div class="model-card group relative p-8 rounded-3xl bg-[#12151c] border-2 border-amber-apex shadow-[0_0_40px_rgba(245,158,11,0.15)] transition-all duration-300 flex flex-col justify-between">
+<div class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-amber-apex text-black font-mono text-[10px] font-bold tracking-widest uppercase">
+              BENCHMARK SPEC
+            </div>
+<div>
+<div class="flex justify-between items-start font-mono text-xs text-slate-aero mb-6 mt-2">
+<span>ARCHETYPE 02</span>
+<span class="text-amber-apex font-bold">CIRCUIT COMPETITION</span>
+</div>
+<h3 class="text-3xl font-display font-bold text-titanium mb-2">APEX GT</h3>
+<p class="text-xs font-mono text-titanium-dim leading-relaxed mb-6">Aggressive downforce tuning with active carbon aero channels and dual axial-flux motors.</p>
+<div class="space-y-3 font-mono text-xs border-t border-white/10 pt-6">
+<div class="flex justify-between">
+<span class="text-slate-aero">OUTPUT:</span>
+<span class="text-amber-apex font-bold">1,050 HP</span>
+</div>
+<div class="flex justify-between">
+<span class="text-slate-aero">0-100 KM/H:</span>
+<span class="text-amber-apex font-bold">2.8 SEC</span>
+</div>
+<div class="flex justify-between">
+<span class="text-slate-aero">DOWNFORCE:</span>
+<span class="text-titanium font-bold">850 KG</span>
+</div>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-white/10">
+<a class="block w-full py-3 rounded-xl text-center font-mono text-xs uppercase tracking-wider bg-amber-apex text-black font-bold hover:bg-amber-glow transition-colors shadow-lg" href="#reserve-section">
+                CONFIGURE GT
+              </a>
+</div>
+</div>
+<!-- Variant 3: APEX X -->
+<div class="model-card group relative p-8 rounded-3xl bg-graphite-card border border-white/10 hover:border-amber-apex transition-all duration-300 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start font-mono text-xs text-slate-aero mb-6">
+<span>ARCHETYPE 03</span>
+<span class="text-amber-apex">EXPERIMENTAL PROTOTYPE</span>
+</div>
+<h3 class="text-3xl font-display font-bold text-titanium mb-2">APEX X</h3>
+<p class="text-xs font-mono text-titanium-dim leading-relaxed mb-6">Track-only homologation with ground-effect suction fan and 900V unconstrained architecture.</p>
+<div class="space-y-3 font-mono text-xs border-t border-white/10 pt-6">
+<div class="flex justify-between">
+<span class="text-slate-aero">OUTPUT:</span>
+<span class="text-titanium font-bold">1,400 HP</span>
+</div>
+<div class="flex justify-between">
+<span class="text-slate-aero">MAX G:</span>
+<span class="text-titanium font-bold">2.85 LATERAL G</span>
+</div>
+<div class="flex justify-between">
+<span class="text-slate-aero">CHASSIS:</span>
+<span class="text-titanium font-bold">30 ALLOCATIONS</span>
+</div>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-white/10">
+<a class="block w-full py-3 rounded-xl text-center font-mono text-xs uppercase tracking-wider border border-white/20 text-titanium hover:bg-white hover:text-black transition-colors" href="#reserve-section">
+                INQUIRE APEX X
+              </a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ========================================================================= -->
+<!-- 13 & 14 — THE CONTINUOUS "DRIVE" JOURNEY & ACOUSTIC KINETICS              -->
+<!-- ========================================================================= -->
+<section class="relative py-28 px-6 md:px-16 bg-graphite-deep border-t border-white/5 overflow-hidden" id="drive-journey">
+<div class="max-w-7xl mx-auto w-full">
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-16">
+<div>
+<span class="font-mono text-xs text-amber-apex tracking-widest uppercase">13 // SEAMLESS EXPEDITION</span>
+<h2 class="text-3xl md:text-5xl font-display font-black text-titanium mt-2">ONE CONTINUOUS ROAD.</h2>
+</div>
+<p class="font-mono text-xs text-slate-aero max-w-sm mt-4 md:mt-0">
+            Tunnel → Mountain Pass → Megacity → Coastal Cliff. The environment shifts seamlessly with velocity.
+          </p>
+</div>
+<!-- Continuous Environment Canvas Container -->
+<div class="relative rounded-3xl overflow-hidden border border-white/15 bg-black p-8 md:p-12 min-h-[480px] flex flex-col justify-between">
+<!-- Environment Background Visual with Lighting Shifting -->
+<div class="absolute inset-0 bg-gradient-to-r from-[#0d1527] via-[#111c19] to-[#1f160b] opacity-60"></div>
+<div class="absolute inset-0 bg-telemetry-grid opacity-20"></div>
+<div class="relative z-10 flex justify-between items-start font-mono text-xs">
+<div class="bg-black/70 px-4 py-2 rounded-lg border border-white/10">
+<span class="text-slate-aero block text-[10px]">ACTIVE BIOME</span>
+<span class="text-amber-apex font-bold text-sm">ST. GOTTHARD ALPINE SECTOR</span>
+</div>
+<div class="bg-black/70 px-4 py-2 rounded-lg border border-white/10 text-right">
+<span class="text-slate-aero block text-[10px]">ELEVATION</span>
+<span class="text-titanium font-bold text-sm">2,106 M</span>
+</div>
+</div>
+<!-- Stylized road horizon with kinetic speed waveforms (Acoustic without sound) -->
+<div class="relative z-10 my-16 text-center">
+<!-- 14: Sound Without Sound Waveform Lines -->
+<div class="w-full max-w-2xl mx-auto flex items-center justify-center gap-1 h-16">
+<div class="w-1 bg-amber-apex/30 h-4 animate-pulse"></div>
+<div class="w-1 bg-amber-apex/50 h-8 animate-pulse"></div>
+<div class="w-1 bg-amber-apex/80 h-14 animate-pulse"></div>
+<div class="w-1 bg-amber-apex h-10 animate-pulse"></div>
+<div class="w-1 bg-white h-16 animate-pulse"></div>
+<div class="w-1 bg-amber-apex h-12 animate-pulse"></div>
+<div class="w-1 bg-amber-apex/80 h-6 animate-pulse"></div>
+<div class="w-1 bg-amber-apex/40 h-3 animate-pulse"></div>
+</div>
+<p class="font-mono text-xs tracking-widest text-titanium mt-4 uppercase">
+              ACOUSTIC FREQUENCY // HIGH-VOLTAGE HARMONIC VIBRATION
+            </p>
+</div>
+<!-- Bottom checkpoints ribbon -->
+<div class="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-4 pt-6 border-t border-white/10 font-mono text-xs">
+<div class="text-amber-apex">
+<span class="block text-[10px] text-slate-aero">SECTOR 01</span>
+<span>TUNNEL FLUX (180 KM/H)</span>
+</div>
+<div class="text-titanium">
+<span class="block text-[10px] text-slate-aero">SECTOR 02</span>
+<span>ALPINE SWITCHBACKS</span>
+</div>
+<div class="text-slate-aero">
+<span class="block text-[10px] text-slate-aero">SECTOR 03</span>
+<span>PACIFIC COASTAL CLIFF</span>
+</div>
+<div class="text-slate-aero">
+<span class="block text-[10px] text-slate-aero">SECTOR 04</span>
+<span>SALT FLAT TERMINAL RUN</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ========================================================================= -->
+<!-- 15 — FINAL SECTION: CALM & RESERVE CHASSIS                                -->
+<!-- ========================================================================= -->
+<section class="relative min-h-screen py-32 px-6 md:px-16 bg-graphite-deep border-t border-white/5 flex flex-col items-center justify-center text-center" id="reserve-section">
+<div class="max-w-3xl mx-auto w-full">
+<p class="font-mono text-xs tracking-[0.4em] uppercase text-slate-aero mb-6">
+          YOU'VE SEEN THE MACHINE.
+        </p>
+<h2 class="text-5xl md:text-8xl font-display font-black text-titanium mb-8 tracking-tight">
+          NOW DRIVE IT.
+        </h2>
+<p class="text-titanium-dim font-mono text-sm max-w-xl mx-auto mb-12 leading-relaxed">
+          Production is strictly limited to 99 numbered chassis globally. Every APEX machine is hand-assembled in our carbon facility with bespoke ergonomic cockpit fitting.
+        </p>
+<!-- Magnetic Dual CTAs -->
+<div class="flex flex-col sm:flex-row items-center justify-center gap-6">
+<button class="w-full sm:w-auto px-10 py-5 rounded-2xl bg-amber-apex text-black font-mono text-xs uppercase tracking-widest font-bold hover:bg-amber-glow shadow-[0_0_40px_rgba(245,158,11,0.3)] transition-all transform hover:scale-105" id="reserve-cta">
+            [ RESERVE APEX CHASSIS ]
+          </button>
+<button class="w-full sm:w-auto px-10 py-5 rounded-2xl border border-white/20 text-titanium font-mono text-xs uppercase tracking-widest font-semibold hover:border-white hover:bg-white/5 transition-all">
+            [ SCHEDULE TRACK SIMULATION ]
+          </button>
+</div>
+<div class="mt-20 pt-12 border-t border-white/10 flex flex-wrap items-center justify-between text-slate-aero font-mono text-xs gap-4">
+<div class="flex items-center gap-3">
+<span class="w-2 h-2 rounded-full bg-amber-apex"></span>
+<span>APEX AUTOMOTIVE KINETICS © 2025</span>
+</div>
+<div>
+            ALL SPECIFICATIONS SUBJECT TO TRACK HOMOLOGATION
+          </div>
+</div>
+</div>
+</section>
+</main>
+<!-- ========================================================================= -->
+<!-- JAVASCRIPT: THE VELOCITY & INTERACTION ENGINE                             -->
+<!-- ========================================================================= -->
+<script>
+    // Cursor Physics & Spotlight Scanner
+    const cursorDot = document.getElementById('cursor-dot');
+    const cursorRing = document.getElementById('cursor-ring');
+    const scannerOverlay = document.getElementById('scanner-overlay');
+    const scannerViewport = document.getElementById('scanner-viewport');
+    const gBall = document.getElementById('g-ball');
+    const hudGForce = document.getElementById('hud-g-force');
+
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      
+      cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+      cursorRing.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+
+      // Update cockpit G-force ball based on mouse position relative to center
+      if (gBall) {
+        const cx = window.innerWidth / 2;
+        const cy = window.innerHeight / 2;
+        const dx = (mouseX - cx) / cx * 28;
+        const dy = (mouseY - cy) / cy * 28;
+        gBall.style.transform = `translate(${dx}px, ${dy}px)`;
+        if (hudGForce) {
+          const gCalc = (1.0 + Math.hypot(dx, dy) * 0.03).toFixed(2);
+          hudGForce.textContent = `${gCalc} G`;
+        }
+      }
+
+      // Update scanner mask spotlight coordinates
+      if (scannerViewport && scannerOverlay) {
+        const rect = scannerViewport.getBoundingClientRect();
+        if (mouseX >= rect.left && mouseX <= rect.right && mouseY >= rect.top && mouseY <= rect.bottom) {
+          const relX = mouseX - rect.left;
+          const relY = mouseY - rect.top;
+          scannerOverlay.style.background = `radial-gradient(circle 220px at ${relX}px ${relY}px, rgba(245,158,11,0.22) 0%, rgba(11,12,14,0.94) 70%, #060708 100%)`;
+        }
+      }
+    });
+
+    // 01 — IGNITION SEQUENCE
+    const ignitionBtn = document.getElementById('ignition-btn');
+    const ignitionLaser = document.getElementById('ignition-laser');
+    const ignitionSection = document.getElementById('ignition-section');
+    const driveExperience = document.getElementById('drive-experience');
+    const apexNav = document.getElementById('apex-nav');
+    const navMode = document.getElementById('nav-mode-readout');
+
+    let isIgnited = false;
+
+    if (ignitionBtn) {
+      ignitionBtn.addEventListener('click', () => {
+        if (isIgnited) return;
+        isIgnited = true;
+
+        // Laser beam burst
+        ignitionLaser.classList.add('animate-laser');
+
+        // Transition soundless engine explosion
+        setTimeout(() => {
+          driveExperience.classList.remove('opacity-30', 'filter', 'blur-[2px]', 'pointer-events-none');
+          driveExperience.classList.add('opacity-100');
+          apexNav.classList.remove('opacity-0', '-translate-y-full');
+          apexNav.classList.add('opacity-100', 'translate-y-0');
+          navMode.textContent = 'DRIVE_READY // SPORT+';
+          navMode.classList.remove('text-amber-apex');
+          navMode.classList.add('text-emerald-400');
+
+          // Smooth scroll past ignition
+          window.scrollBy({ top: window.innerHeight * 0.85, behavior: 'smooth' });
+        }, 500);
+      });
+    }
+
+    // 03 — VELOCITY SCROLL SPEED SENSING
+    let lastScrollY = window.scrollY;
+    let lastScrollTime = performance.now();
+    const navSpeedVal = document.getElementById('nav-speed-val');
+    const heroBigSpeed = document.getElementById('hero-big-speed');
+    const cockpitDigitalSpeed = document.getElementById('cockpit-digital-speed');
+    const stretchingTitle = document.getElementById('stretching-title');
+
+    window.addEventListener('scroll', () => {
+      const now = performance.now();
+      const currentScrollY = window.scrollY;
+      const deltaY = Math.abs(currentScrollY - lastScrollY);
+      const deltaTime = Math.max(1, now - lastScrollTime);
+      
+      // Calculate scroll speed in virtual km/h
+      const rawSpeed = (deltaY / deltaTime) * 120;
+      const speedKmH = Math.min(340, Math.max(24, Math.round(rawSpeed + 35)));
+
+      if (navSpeedVal) navSpeedVal.textContent = speedKmH.toString().padStart(3, '0');
+      if (heroBigSpeed) heroBigSpeed.textContent = speedKmH.toString().padStart(3, '0');
+      if (cockpitDigitalSpeed) cockpitDigitalSpeed.textContent = speedKmH.toString();
+
+      // Stretch typography at high scroll speed
+      if (stretchingTitle) {
+        const scaleX = 1 + (speedKmH / 1200);
+        stretchingTitle.style.transform = `scaleX(${scaleX})`;
+      }
+
+      lastScrollY = currentScrollY;
+      lastScrollTime = now;
+    });
+
+    // 06 — PLAYABLE 0-100 KM/H LAUNCH CONTROLLER
+    const launchCounter = document.getElementById('launch-counter');
+    const triggerLaunchBtn = document.getElementById('trigger-launch-btn');
+    const resetLaunchBtn = document.getElementById('reset-launch-btn');
+    const launchBanner = document.getElementById('launch-banner');
+
+    let launchInterval = null;
+
+    if (triggerLaunchBtn && launchCounter) {
+      triggerLaunchBtn.addEventListener('click', () => {
+        clearInterval(launchInterval);
+        let speed = 0;
+        launchBanner.textContent = 'TORQUE APPLIED // 1,240 NM DISCHARGE';
+        launchBanner.classList.add('text-amber-apex', 'border-amber-apex');
+
+        launchInterval = setInterval(() => {
+          speed += Math.floor(Math.random() * 5) + 3;
+          if (speed >= 100) {
+            speed = 100;
+            clearInterval(launchInterval);
+            launchCounter.textContent = '100';
+            launchBanner.textContent = 'LAUNCH COMPLETE // 3.2 SECONDS VERIFIED';
+            launchBanner.classList.remove('text-amber-apex');
+            launchBanner.classList.add('text-emerald-400', 'border-emerald-400');
+            // Kinetic kickback effect
+            launchCounter.style.transform = 'scale(1.08)';
+            setTimeout(() => { launchCounter.style.transform = 'scale(1)'; }, 200);
+          } else {
+            launchCounter.textContent = speed.toString().padStart(2, '0');
+          }
+        }, 80);
+      });
+    }
+
+    if (resetLaunchBtn && launchCounter) {
+      resetLaunchBtn.addEventListener('click', () => {
+        clearInterval(launchInterval);
+        launchCounter.textContent = '00';
+        launchBanner.textContent = 'PRESS [ LAUNCH PEDAL ] OR SCROLL TO RELEASE TORQUE';
+        launchBanner.classList.remove('text-amber-apex', 'border-amber-apex', 'text-emerald-400', 'border-emerald-400');
+      });
+    }
+
+    // 15 — MAGNETIC CTA ATTRACTION
+    const reserveCta = document.getElementById('reserve-cta');
+    if (reserveCta) {
+      reserveCta.addEventListener('mousemove', (e) => {
+        const rect = reserveCta.getBoundingClientRect();
+        const dx = e.clientX - (rect.left + rect.width / 2);
+        const dy = e.clientY - (rect.top + rect.height / 2);
+        reserveCta.style.transform = `translate(${dx * 0.25}px, ${dy * 0.25}px) scale(1.05)`;
+      });
+      reserveCta.addEventListener('mouseleave', () => {
+        reserveCta.style.transform = 'translate(0px, 0px) scale(1)';
+      });
+    }
+  </script>
+</body></html>
