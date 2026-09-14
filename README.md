@@ -1,4 +1,4 @@
-﻿<div align="center">
+<div align="center">
 
 <img src="./Apex-logo.png" alt="APEX Logo" width="320" />
 
@@ -18,6 +18,11 @@
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES2024-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![Lenis](https://img.shields.io/badge/Lenis-Smooth_Scroll-7C3AED?style=for-the-badge&logo=npm&logoColor=white)](https://github.com/studio-freight/lenis)
 [![PostCSS](https://img.shields.io/badge/PostCSS-Autoprefixer-DD3A0A?style=for-the-badge&logo=postcss&logoColor=white)](https://postcss.org/)
+
+<br />
+
+[![Live Demo](https://img.shields.io/badge/LIVE_DEMO-APEX_EXPERIENCE-f59e0b?style=for-the-badge&logo=googlechrome&logoColor=black)](https://pranav-6944.github.io/Apex/)
+[![Deploy Status](https://img.shields.io/github/actions/workflow/status/pranav-6944/Apex/deploy.yml?branch=main&style=for-the-badge&label=DEPLOYMENT)](https://github.com/pranav-6944/Apex/actions)
 
 </div>
 

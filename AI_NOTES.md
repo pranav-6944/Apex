@@ -60,6 +60,12 @@
 ## Verification & Browser QA Results
 - **Build Status:** `npm run build` executed with exit code 0; clean production bundle (`dist/index.html`, `dist/assets/index-*.css`, `dist/assets/index-*.js`).
 - **Dev Server:** Running on `http://localhost:5173/`.
+- **GitHub Pages Deployment Config:**
+  - Base Path: `command === 'build' ? '/Apex/' : '/'` configured in `vite.config.js`
+  - GitHub Actions Workflow: `.github/workflows/deploy.yml` using `actions/upload-pages-artifact@v3` and `actions/deploy-pages@v4`
+  - Live Target URL: `https://pranav-6944.github.io/Apex/`
+  - Repository: `https://github.com/pranav-6944/Apex.git`
+  - Open Graph / Twitter Cards: Updated in `index.html` with absolute production URL `https://pranav-6944.github.io/Apex/Apex-logo.png`
 - **Browser Automation Subagent:**
   - Tested initial cold boot ignition screen (`SYSTEM OFFLINE`).
   - Tested tactile core click and laser beam ignition sequence.
