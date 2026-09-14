@@ -65,8 +65,11 @@
   - GitHub Actions Workflow: `.github/workflows/deploy.yml` upgraded to Node 22, dual-deploying to both GitHub Pages and `gh-pages` branch.
   - Dedicated `gh-pages` branch: Published with built `dist/` bundle including `.nojekyll` and `404.html`.
   - Live Target URL: `https://pranav-6944.github.io/Apex/`
-  - Repository: `https://github.com/pranav-6944/Apex.git`
   - Open Graph / Twitter Cards: Updated in `index.html` with absolute production URL `https://pranav-6944.github.io/Apex/Apex-logo.png`
+- **Vercel Deployment Architecture:**
+  - Base Path Detection: Dynamic base in `vite.config.js` detects `process.env.VERCEL` to use root `/`, while detecting `GITHUB_ACTIONS`/`DEPLOY_TARGET=gh-pages` to use `/Apex/`.
+  - Configuration File: `vercel.json` added with framework `vite`, build command `npm run build`, output directory `dist`, and client-side wildcard rewrites (`/(.*) -> /index.html`).
+  - Predeploy script: `npm run predeploy` sets `DEPLOY_TARGET=gh-pages` for local gh-pages deployments.
 - **White Screen Root Cause & Remediation:**
   - Root cause: GitHub Pages was set to "Deploy from a branch" (branch `main`, root `/`), which executed Jekyll on the raw source repo rather than Vite's compiled `dist/`. Raw `index.html` requested `/src/main.jsx` (which returned 404), causing React to fail to boot and presenting a blank white screen.
   - Fixes applied:

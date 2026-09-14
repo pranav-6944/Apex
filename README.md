@@ -22,6 +22,7 @@
 <br />
 
 [![Live Demo](https://img.shields.io/badge/LIVE_DEMO-APEX_EXPERIENCE-f59e0b?style=for-the-badge&logo=googlechrome&logoColor=black)](https://pranav-6944.github.io/Apex/)
+[![Deploy with Vercel](https://img.shields.io/badge/Deploy-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fpranav-6944%2FApex)
 [![Deploy Status](https://img.shields.io/github/actions/workflow/status/pranav-6944/Apex/deploy.yml?branch=main&style=for-the-badge&label=DEPLOYMENT)](https://github.com/pranav-6944/Apex/actions)
 
 </div>

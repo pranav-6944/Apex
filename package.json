@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build && node -e \"require('fs').copyFileSync('dist/index.html', 'dist/404.html')\"",
     "preview": "vite preview",
-    "predeploy": "npm run build",
+    "predeploy": "node -e \"require('child_process').execSync('npm run build', {stdio: 'inherit', env: {...process.env, DEPLOY_TARGET: 'gh-pages'}})\"",
     "deploy": "gh-pages -d dist --dotfiles --nojekyll"
   },
   "dependencies": {
