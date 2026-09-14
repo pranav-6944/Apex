@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
-
-const CAR_IMAGE_URL = "https://lh3.googleusercontent.com/aida/AEtjO1VdxZNrMUBxXWcu--Tu-u6y56ahLA6lbwoDgmyyxWy3AjR2uDhjP0KG6UDf8ZWSt3w-A_KRXWfZzGTLilomz_i_osrqJRnsAY_zeKgOa-khP3qRbWoQidjlLddhMN55IytxiT5kQoJH0gjqp6BflsZ9mFNauhoD9UXtonuiTXFSk-epcZd2gv8oBV7oCy0ODiVNxhIZfIy8mFc4gixVtg889zem2yEcMcJdZVJTvOj2SIavEzTHskgwLX4";
+import apexCarImg from '../assets/apex-hypercar.jpg';
 
 export function ScannerSection() {
   const viewportRef = useRef(null);
@@ -63,7 +62,7 @@ export function ScannerSection() {
           <img
             alt="APEX Scanner View"
             className="absolute inset-0 w-full h-full object-cover filter brightness-75 contrast-125 select-none pointer-events-none"
-            src={CAR_IMAGE_URL}
+            src={apexCarImg}
           />
 
           {/* Collimated beam radial spotlight overlay */}

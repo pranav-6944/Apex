@@ -75,6 +75,14 @@
     3. Created and published the compiled production bundle to the `gh-pages` branch.
     4. Updated GitHub Actions workflow with Node 22 to eliminate runner deprecation warning and dual-deploy to `gh-pages`.
     5. Optimized `GForceMeter.jsx` with `requestAnimationFrame` and change-detection to prevent mouse-movement re-render spikes.
+- **Image Assets Audit & Resolution:**
+  - Root cause: The temporary Google AIDA / Stitch usercontent URLs (`https://lh3.googleusercontent.com/aida/...`) for the logo and hypercar expired, returning HTTP 403 Forbidden.
+  - Fixes applied:
+    1. Cropped the official brand logo from transparent canvas padding into `src/assets/Apex-logo.png` and `public/Apex-logo.png`.
+    2. Replaced expired external logo URL in `HeaderHUD.jsx` with direct local asset import `import apexLogo from '../assets/Apex-logo.png'`.
+    3. Generated high-resolution 16:9 aerodynamic APEX hypercar studio photograph in wind tunnel lighting matching `DESIGN.md` specifications (`src/assets/apex-hypercar.jpg` and `public/apex-hypercar.jpg`).
+    4. Replaced expired car image URLs in `AssemblySection.jsx` and `ScannerSection.jsx` with direct asset imports (`import apexCarImg from '../assets/apex-hypercar.jpg'`).
+    5. Both assets are now bundled with hash fingerprints into `dist/assets/` (`Apex-logo-*.png` and `apex-hypercar-*.jpg`), eliminating all external network dependencies and 403 errors.
 - **Browser Automation Subagent:**
   - Tested initial cold boot ignition screen (`SYSTEM OFFLINE`).
   - Tested tactile core click and laser beam ignition sequence.

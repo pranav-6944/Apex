@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { AerodynamicStreamlinesShader } from '../components/AerodynamicStreamlinesShader';
-
-const ASSEMBLED_CAR_URL = "https://lh3.googleusercontent.com/aida/AEtjO1VdxZNrMUBxXWcu--Tu-u6y56ahLA6lbwoDgmyyxWy3AjR2uDhjP0KG6UDf8ZWSt3w-A_KRXWfZzGTLilomz_i_osrqJRnsAY_zeKgOa-khP3qRbWoQidjlLddhMN55IytxiT5kQoJH0gjqp6BflsZ9mFNauhoD9UXtonuiTXFSk-epcZd2gv8oBV7oCy0ODiVNxhIZfIy8mFc4gixVtg889zem2yEcMcJdZVJTvOj2SIavEzTHskgwLX4";
+import apexCarImg from '../assets/apex-hypercar.jpg';
 
 export function AssemblySection() {
   const [activeStep, setActiveStep] = useState(0);
@@ -95,7 +94,7 @@ export function AssemblySection() {
               alt="APEX Assembled Hypercar"
               className="w-full h-full object-cover rounded-lg filter contrast-125 transition-all duration-700 select-none pointer-events-none"
               id="assembled-car-img"
-              src={ASSEMBLED_CAR_URL}
+              src={apexCarImg}
             />
 
             {/* WebGL Air Streamline Shader Layer */}

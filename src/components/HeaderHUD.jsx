@@ -1,6 +1,5 @@
 import React from 'react';
-
-const APEX_LOGO_URL = "https://lh3.googleusercontent.com/aida/AEtjO1VKjA4zWoe6oxC6V2H_vbdp4EpBAWLimXoMuQk3LPqlbUJGC_LKQaNLHBdIA6_kHZuzel_d6MK4UmLZ4AJOihGAEbiKAn1nTyE2Y4fH1BSBQJLUVDOezF55fIj0y8gp0DBJ-ZiqrmQUWM4kcOgZ2iL3dFEWTpvmCPUYbIU1JF4WJhPDCNOtf9liwLebWwvmqwdDjWqOguQg-eDgUKJK1WxS2nd-pJ_xreU93dzm2Z-s0Cg4QmCWnxl6hkY";
+import apexLogo from '../assets/Apex-logo.png';
 
 export function HeaderHUD({ isIgnited, speedKmH, lateralG = "1.02" }) {
   const displaySpeed = Math.max(0, speedKmH || 0).toString().padStart(3, '0');
@@ -16,8 +15,8 @@ export function HeaderHUD({ isIgnited, speedKmH, lateralG = "1.02" }) {
         <a href="#ignition-section" className="flex items-center">
           <img
             alt="APEX"
-            className="h-5 sm:h-6 w-auto opacity-90 hover:opacity-100 transition-opacity"
-            src={APEX_LOGO_URL}
+            className="h-6 sm:h-7 w-auto opacity-95 hover:opacity-100 transition-opacity"
+            src={apexLogo}
           />
         </a>
         <div className="hidden md:flex items-center gap-3 pl-6 border-l border-white/10 font-mono text-[11px] text-slate-aero">
