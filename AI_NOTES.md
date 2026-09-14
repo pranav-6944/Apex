@@ -62,10 +62,19 @@
 - **Dev Server:** Running on `http://localhost:5173/`.
 - **GitHub Pages Deployment Config:**
   - Base Path: `command === 'build' ? '/Apex/' : '/'` configured in `vite.config.js`
-  - GitHub Actions Workflow: `.github/workflows/deploy.yml` using `actions/upload-pages-artifact@v3` and `actions/deploy-pages@v4`
+  - GitHub Actions Workflow: `.github/workflows/deploy.yml` upgraded to Node 22, dual-deploying to both GitHub Pages and `gh-pages` branch.
+  - Dedicated `gh-pages` branch: Published with built `dist/` bundle including `.nojekyll` and `404.html`.
   - Live Target URL: `https://pranav-6944.github.io/Apex/`
   - Repository: `https://github.com/pranav-6944/Apex.git`
   - Open Graph / Twitter Cards: Updated in `index.html` with absolute production URL `https://pranav-6944.github.io/Apex/Apex-logo.png`
+- **White Screen Root Cause & Remediation:**
+  - Root cause: GitHub Pages was set to "Deploy from a branch" (branch `main`, root `/`), which executed Jekyll on the raw source repo rather than Vite's compiled `dist/`. Raw `index.html` requested `/src/main.jsx` (which returned 404), causing React to fail to boot and presenting a blank white screen.
+  - Fixes applied:
+    1. Created `.nojekyll` in `public/` and `dist/` to bypass Jekyll processing completely.
+    2. Added automatic generation of `404.html` from `index.html` for client-side routing fallback.
+    3. Created and published the compiled production bundle to the `gh-pages` branch.
+    4. Updated GitHub Actions workflow with Node 22 to eliminate runner deprecation warning and dual-deploy to `gh-pages`.
+    5. Optimized `GForceMeter.jsx` with `requestAnimationFrame` and change-detection to prevent mouse-movement re-render spikes.
 - **Browser Automation Subagent:**
   - Tested initial cold boot ignition screen (`SYSTEM OFFLINE`).
   - Tested tactile core click and laser beam ignition sequence.

@@ -2,32 +2,44 @@ import React, { useEffect, useRef, useState } from 'react';
 
 export function GForceMeter({ onGForceChange }) {
   const ballRef = useRef(null);
+  const lastTotalG = useRef('1.02');
   const [gMetrics, setGMetrics] = useState({ left: '1.28', right: '1.14', total: '1.02' });
 
   useEffect(() => {
+    let animId = null;
+
     const handleMouseMove = (e) => {
-      const cx = window.innerWidth / 2;
-      const cy = window.innerHeight / 2;
-      const dx = ((e.clientX - cx) / cx) * 28;
-      const dy = ((e.clientY - cy) / cy) * 28;
+      if (animId) return;
 
-      if (ballRef.current) {
-        ballRef.current.style.transform = `translate(${dx}px, ${dy}px)`;
-      }
+      animId = requestAnimationFrame(() => {
+        animId = null;
+        const cx = window.innerWidth / 2;
+        const cy = window.innerHeight / 2;
+        const dx = ((e.clientX - cx) / cx) * 28;
+        const dy = ((e.clientY - cy) / cy) * 28;
 
-      const dist = Math.hypot(dx, dy);
-      const totalG = (1.0 + dist * 0.03).toFixed(2);
-      const leftG = (1.1 + Math.max(0, -dx) * 0.04).toFixed(2);
-      const rightG = (1.1 + Math.max(0, dx) * 0.04).toFixed(2);
+        if (ballRef.current) {
+          ballRef.current.style.transform = `translate(${dx}px, ${dy}px)`;
+        }
 
-      setGMetrics({ left: leftG, right: rightG, total: totalG });
-      if (onGForceChange) {
-        onGForceChange(totalG);
-      }
+        const dist = Math.hypot(dx, dy);
+        const totalG = (1.0 + dist * 0.03).toFixed(2);
+        const leftG = (1.1 + Math.max(0, -dx) * 0.04).toFixed(2);
+        const rightG = (1.1 + Math.max(0, dx) * 0.04).toFixed(2);
+
+        setGMetrics({ left: leftG, right: rightG, total: totalG });
+        if (onGForceChange && lastTotalG.current !== totalG) {
+          lastTotalG.current = totalG;
+          onGForceChange(totalG);
+        }
+      });
     };
 
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (animId) cancelAnimationFrame(animId);
+    };
   }, [onGForceChange]);
 
   return (
